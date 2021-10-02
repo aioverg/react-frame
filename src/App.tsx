@@ -1,35 +1,40 @@
 import React from 'react';
-import axios from 'axios';
+import { BrowserRouter, Switch, Route, Link } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
+import Login from './views/login';
+import Home from './views/home';
 
 function App() {
-  const fx = () => {
-    axios({
-      method: 'post',
-      url: '/api/login',
-      data: {username: 'aioverg', password:123456}
-    }).then(function (response) {
-      }).catch(error => console.log('error', error))
-  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <button onClick={fx}>点击</button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <header className="App-header">
+          <Link to="/">首页</Link>
+          <Link to="/login">登录</Link>
+          <img src={logo} className="App-logo" alt="logo" />
+          <p>
+            Edit <code>src/App.tsx</code> and save to reload.
+          </p>
+          <a
+            className="App-link"
+            href="https://reactjs.org"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Learn React
+          </a>
+          <Switch>
+            <Route path="/login">
+              <Login />
+            </Route>
+            <Route path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </header>
+      </div>
+    </BrowserRouter>
   );
 }
 
