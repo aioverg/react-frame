@@ -6,8 +6,27 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+* {
+  box-sizing: border-box
+}
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+input {
+  outline: none;
+  height: 30px;
+  border: 1px solid #40a9ff;
+  border-radius: 2px;
+  padding: 0 11px;
+}
+button {
+  height: 30px;
+  background: #1890ff;
+  border: 1px solid #1890ff;
+  border-radius: 2px;
+  padding: 0 15px;
+  cursor: pointer;
+  color: #FFFFFF;
 }

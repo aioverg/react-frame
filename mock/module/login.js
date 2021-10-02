@@ -5,8 +5,7 @@ module.exports = {
       return res.json({
         status: 'ok',
         code: 0,
-        token: "123456",
-        data: {id: 1,username: 'aioverg',}
+        data: {id: 1,username: 'aioverg', token: 'aioverg'}
       })
     } else {
       return res.status(403).json({

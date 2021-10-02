@@ -27,7 +27,10 @@ export function setCookie(name: string, value: any, extime: number = 1440, domai
   document.cookie = name + "=" + value + ";" + expires + ";path=/" + (domain ? ";domain=" + domain : "");
 }
 
-// 删除cookie
-export function clearCookie(cname: any) {
-  setCookie(cname, "", -1, "")
+/**
+ * 
+ * @param name 删除 cookie
+ */
+export function delCookie(name: string) {
+  setCookie(name, "", -1, "")
 }
