@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import Login from './views/login';
-import Home from './views/home';
+import { BrowserRouter, Switch, Route  } from 'react-router-dom';
+import Login from './views/Login';
+import Home from './views/Home';
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <Switch>
         <Route path="/login">
           <Login />
@@ -13,6 +13,7 @@ function App() {
         <Route path="/">
           <Home />
         </Route>
+        {/* <Redirect from="/" to="/home" /> */}
       </Switch>
     </BrowserRouter>
   );

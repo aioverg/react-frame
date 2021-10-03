@@ -30,3 +30,6 @@ button {
   cursor: pointer;
   color: #FFFFFF;
 }
+a {
+  text-decoration:none;
+}
