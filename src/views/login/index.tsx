@@ -3,8 +3,8 @@ import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import axios from 'axios';
 import { setCookie, getCookie } from '@src/utils/cookie'
-import Input from "../components/Input";
-import Button from "../components/Button";
+import Input from '@src/components/Input'
+import Button from "@src/components/Button";
 
 const LoginCss = styled.div`
   width: 100%;

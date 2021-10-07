@@ -1,8 +1,5 @@
 import React, { useState } from "react"
 import styled from 'styled-components'
-// import D3AnimatedTransitions from'@src/views/components/d3/D3AnimatedTransitions'
-// import D3NestdSelections from '@src/views/components/d3/D3NestdSelections'
-// import D3Update from "@src/views/components/d3/D3Update";
 import options from "./options";
 
 

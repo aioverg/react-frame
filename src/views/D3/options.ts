@@ -1,7 +1,7 @@
-import D3AnimatedTransitions from '@src/views/components/d3/D3AnimatedTransitions'
-import D3NestdSelections from '@src/views/components/d3/D3NestdSelections'
-import D3Update from '@src/views/components/d3/D3Update'
-import D3AreaChart from '@src/views/components/d3/D3AreaChart'
+import D3AnimatedTransitions from '@src/components/d3/D3AnimatedTransitions'
+import D3NestdSelections from '@src/components/d3/D3NestdSelections'
+import D3Update from '@src/components/d3/D3Update'
+import D3AreaChart from '@src/components/d3/D3AreaChart'
 const options = [
   {
     name: '动画过渡',
