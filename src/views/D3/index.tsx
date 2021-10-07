@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 import styled from 'styled-components'
 import options from "./options";
 
@@ -25,7 +26,17 @@ const D3Css = styled.div`
 interface D3Props {
 }
 function D3(props: D3Props) {
+  const history = useHistory()
   const [curName, setCurName] = useState('D3AnimatedTransitions')
+  
+  const onClick = (key:string) => {
+    history.push(history.location.pathname + '?key=' + key)
+    setCurName(key)
+  }
+  
+  useEffect(() => {
+    setCurName(history.location.search.split('=')[1])
+  }, [history])
   return (
     <D3Css>
       <div className='left'>
@@ -33,7 +44,7 @@ function D3(props: D3Props) {
           return (
             <div
             key={item.key}
-            onClick={() => setCurName(item.key)}
+            onClick={() => onClick(item.key)}
             style={{color: curName === item.key ? '#597ef7' : ''}}
             >{item.name}</div>
           )
