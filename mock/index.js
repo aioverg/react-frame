@@ -15,6 +15,7 @@ function readMockDir(dir) {
   let dirs = fs.readdirSync(dir)
 
   dirs.forEach(file => {
+    if(file === 'date'){return}
     let _path = path.join(dir, file)
     let isDirectory = fs.statSync(_path).isDirectory()
     if (isDirectory) {
@@ -25,7 +26,7 @@ function readMockDir(dir) {
     }
   })
 }
-readMockDir(path.join(__dirname))
+readMockDir(path.join(__dirname, './module/'))
 
 /*
 导出一个如下形式的函数
