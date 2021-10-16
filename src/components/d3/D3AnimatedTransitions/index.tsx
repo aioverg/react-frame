@@ -6,8 +6,15 @@ import styled from 'styled-components'
 import * as d3 from 'd3'
 import { useState } from 'react'
 
-const SvgBox = styled.svg`
-  `
+const ContentBox = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  padding: 16px;
+`
 
 const hexadecimal = '0123456789ABCDEF'
 
@@ -31,7 +38,7 @@ function D3AnimatedTransitions(props: D3AnimatedTransitionsProps) {
 
   // 初始化
   const init = () => {
-    d3.select(ref.current).style('width', 600).style('height', 600)
+    d3.select(ref.current).style('width', 600).style('height', 100)
       .append('g')
       .selectAll('text').data(hexadecimal.split(''))
       .enter()
@@ -39,7 +46,7 @@ function D3AnimatedTransitions(props: D3AnimatedTransitionsProps) {
       .style('fill', randomColor())
       .style('font-size', 40)
       .style('font-weight', 'bold')
-      .attr('y', 200)
+      .attr('y', 60)
       .attr('x', (d, i) => i * 30)
       .text(d => d)
   }
@@ -71,11 +78,13 @@ function D3AnimatedTransitions(props: D3AnimatedTransitionsProps) {
   }
 
   return (
-    <>
-      <button onClick={mach}>手动</button>
-      <button onClick={auto}>自动</button>
-      <SvgBox ref={ref} ></SvgBox>
-    </>
+    <ContentBox>
+      <svg ref={ref}></svg>
+      <div>
+        <button onClick={mach}>手动</button>
+        <button onClick={auto} style={{marginLeft: '16px'}}>自动</button>
+      </div>
+    </ContentBox>
   )
 }
 

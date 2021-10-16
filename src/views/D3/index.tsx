@@ -21,6 +21,7 @@ const D3Css = styled.div`
   }
   .right {
     flex: 1;
+    padding: 16px;
   }
 `
 interface D3Props {

@@ -6,20 +6,29 @@ import styled from 'styled-components'
 import * as d3 from 'd3'
 import { useState } from 'react'
 
-const SvgBox = styled.svg`
-text {
-  font: bold 48px monospace;
-}
 
-.enter {
-  fill: green;
-}
+const ContentBox = styled.div`
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #FFFFFF;
+  padding: 16px;
+  svg {
+    text {
+    font: bold 48px monospace;
+  }
+  .enter {
+    fill: green;
+  }
 
-.update {
-  fill: blue;
-}
-.exit {
-  fill: yellow;
+  .update {
+    fill: blue;
+  }
+  .exit {
+    fill: yellow;
+  }
 }
 `
 
@@ -28,23 +37,23 @@ interface D3NestdSelectionsProps {
 }
 
 
-function D3Update (props: D3NestdSelectionsProps) {
+function D3Update(props: D3NestdSelectionsProps) {
   const svgRef = useRef(null)
   const [timer, setTimer] = useState<any>(null)
-  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("")
+  const alphabet = "1234567890".split("")
 
 
   const init = () => {
-    d3.select(svgRef.current).style('width', 600).style('height', 600).append('g')
+    d3.select(svgRef.current).style('width', 600).style('height', 300).append('g')
   }
 
-  const draw = (data:any) => {
+  const draw = (data: any) => {
     // 定义一个 750 毫秒的转换
-    const t:any = d3.transition()
+    const t: any = d3.transition()
       .duration(750)
 
     // 将新数据 data 与旧元素 text 连接在一起, 并为元素绑定 class 属性
-    const text = d3.select(svgRef.current).select('g').selectAll('text').data(data, (d:any) => d).attr("class", "update")
+    const text = d3.select(svgRef.current).select('g').selectAll('text').data(data, (d: any) => d).attr("class", "update")
 
     // 将新数据 data 中不存在的旧 text 元素去除
     text.exit()
@@ -56,7 +65,7 @@ function D3Update (props: D3NestdSelectionsProps) {
 
     // 更新新数据中的旧元素
     text.attr("class", "update")
-      .attr("y", 60)
+      .attr("y", 100)
       .style("fill-opacity", 1)
       .transition(t)
       .attr("x", function (d, i) { return i * 32; });
@@ -65,12 +74,12 @@ function D3Update (props: D3NestdSelectionsProps) {
     text.enter().append("text")
       .attr("class", "enter")
       .attr("dy", ".35em")
-      .attr("y", -60)
+      .attr("y", -100)
       .attr("x", function (d, i) { return i * 32; })
       .style("fill-opacity", 1e-6)
-      .text((d:any) => d)
+      .text((d: any) => d)
       .transition(t)
-      .attr("y", 60)
+      .attr("y", 100)
       .style("fill-opacity", 1);
   }
 
@@ -78,7 +87,7 @@ function D3Update (props: D3NestdSelectionsProps) {
   const auto = () => {
     const id = d3.interval(function () {
       draw(d3.shuffle(alphabet)
-        .slice(0, Math.floor(Math.random() * 26))
+        .slice(0, Math.floor(Math.random() * 10))
         .sort());
     }, 800)
     setTimer(id)
@@ -90,7 +99,7 @@ function D3Update (props: D3NestdSelectionsProps) {
       timer.stop() // 停止计时器
     }
     draw(d3.shuffle(alphabet)
-      .slice(0, Math.floor(Math.random() * 26))
+      .slice(0, Math.floor(Math.random() * 10))
       .sort());
   }
 
@@ -101,11 +110,14 @@ function D3Update (props: D3NestdSelectionsProps) {
   }, [svgRef])
 
   return (
-    <>
+    <ContentBox>
+      
+      <svg ref={svgRef} ></svg>
+      <div>
       <button onClick={mach}>手动</button>
-      <button onClick={auto}>循环</button>
-      < SvgBox ref={svgRef} ></SvgBox>
-    </>
+      <button onClick={auto} style={{marginLeft: '16px'}}>循环</button>
+      </div>
+    </ContentBox>
   )
 }
 

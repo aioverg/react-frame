@@ -57,7 +57,7 @@ function Home(props: HomeProps) {
             )
           })}
         </div>
-        <div onClick={logout}>退出</div>
+        <div onClick={logout} style={{cursor: 'pointer'}}>退出</div>
       </div>
       <div className='content'>
         <Suspense fallback={<div>Loading...</div>}>
