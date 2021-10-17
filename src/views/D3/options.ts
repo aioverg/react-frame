@@ -1,3 +1,5 @@
+import D3Ex from '@src/components/d3/D3Ex'
+
 import D3AnimatedTransitions from '@src/components/d3/D3AnimatedTransitions'
 import D3NestdSelections from '@src/components/d3/D3NestdSelections'
 import D3Update from '@src/components/d3/D3Update'
@@ -8,6 +10,11 @@ import D3PieChart from '@src/components/d3/D3PieChart'
 import D3ScatterChart from '@src/components/d3/D3ScatterChart'
 import D3DonutChart from '@src/components/d3/D3DonutChart'
 const options = [
+  {
+    name: '实验页面',
+    key: 'D3Ex',
+    component: D3Ex,
+  },
   {
     name: '动画过渡',
     key: 'D3AnimatedTransitions',
