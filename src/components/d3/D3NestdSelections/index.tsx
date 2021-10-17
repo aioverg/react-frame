@@ -8,7 +8,7 @@ import React, { useRef } from 'react'
 import * as d3 from 'd3'
 
 
-function D3NestdSelections () {
+function D3NestdSelections() {
   const ref = useRef(null)
   // 一个分组
   const one = () => {
@@ -16,22 +16,52 @@ function D3NestdSelections () {
   }
   // 四个分组
   const fou = () => {
-    console.log('四个分组', d3.select(ref.current).select('tbody tr').selectAll("td"))
+    console.log('四个分组', d3.select(ref.current).select('tbody').selectAll('tr').selectAll("td"))
+  }
+  // 一个分组
+  const sixteen = () => {
+    console.log('十六个分组', d3.select(ref.current).select('tbody').selectAll('tr').selectAll("td").selectAll('span'))
   }
 
   return (
     <>
       <button onClick={one}>一个分组</button>
       <button onClick={fou}>四个分组</button>
+      <button onClick={sixteen}>十六个分组</button>
       <table ref={ref}>
         <thead>
-          <tr><td>  A</td><td>  B</td><td>  C</td><td>  D</td></tr>
+          <tr>
+            <th><span>A</span></th>
+            <th><span>B</span></th>
+            <th><span>C</span></th>
+            <th><span>D</span></th>
+          </tr>
         </thead>
         <tbody>
-          <tr><td>  0</td><td>  1</td><td>  2</td><td>  3</td></tr>
-          <tr><td>  4</td><td>  5</td><td>  6</td><td>  7</td></tr>
-          <tr><td>  8</td><td>  9</td><td> 10</td><td> 11</td></tr>
-          <tr><td> 12</td><td> 13</td><td> 14</td><td> 15</td></tr>
+          <tr>
+            <td><span>11</span></td>
+            <td><span>12</span></td>
+            <td><span>13</span></td>
+            <td><span>14</span></td>
+          </tr>
+          <tr>
+            <td><span>21</span></td>
+            <td><span>22</span></td>
+            <td><span>23</span></td>
+            <td><span>24</span></td>
+          </tr>
+          <tr>
+            <td><span>31</span></td>
+            <td><span>32</span></td>
+            <td><span>33</span></td>
+            <td><span>34</span></td>
+          </tr>
+          <tr>
+            <td><span>41</span></td>
+            <td><span>42</span></td>
+            <td><span>43</span></td>
+            <td><span>44</span></td>
+          </tr>
         </tbody>
       </table>
     </>
