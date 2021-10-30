@@ -9,6 +9,7 @@ import D3BarChart from'@src/components/d3/D3BarChart'
 import D3PieChart from '@src/components/d3/D3PieChart'
 import D3ScatterChart from '@src/components/d3/D3ScatterChart'
 import D3DonutChart from '@src/components/d3/D3DonutChart'
+import D3BarChartA from '@src/components/d3/D3BarChartA'
 const options = [
   {
     name: '实验页面',
@@ -44,6 +45,11 @@ const options = [
     name: '柱形图',
     key: 'D3BarChart',
     component: D3BarChart,
+  },
+  {
+    name: '柱形图1',
+    key: 'D3BarChartA',
+    component: D3BarChartA,
   },
   {
     name: '饼图',
