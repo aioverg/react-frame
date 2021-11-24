@@ -3,12 +3,12 @@ const router:any = [
   {
     name: '首页',
     path: '/home',
-    component: React.lazy(() => import('@src/views/home/Main')),
+    component: React.lazy(() => import('@src/views/home/main_')),
   },
   {
     name: 'D3',
     path: '/d3',
-    component: React.lazy(() => import('@src/views/d3')),
+    component: React.lazy(() => import('@src/views/d3_')),
   }
 ]
 
