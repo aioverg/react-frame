@@ -56,12 +56,6 @@ function D3Ex(props: D3ExProps) {
   const svgRef = useRef(null)
   const divRef = useRef(null)
   // const alphabet = "ABCDEFGHIGKLMNOPQRSTUVWXYZ".split("")
-  const alphabet = "ABCD".split("")
-  const data = [
-    { name: '张三', age: 18 },
-    { name: '李四', age: 20 },
-    { name: '王五', age: 22 }
-  ]
 
   const init = () => {
     const x = d3.scaleLinear()

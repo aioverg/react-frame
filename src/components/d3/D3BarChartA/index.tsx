@@ -1,7 +1,7 @@
 /**
  * 柱状图
  */
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import * as d3 from 'd3'
 
 
@@ -16,34 +16,6 @@ interface D3BarChartAProps {
 }
 
 const D3BarChartA = (props: D3BarChartAProps) => {
-  const data = useMemo(() => [
-    { label: 'A', num: 0.08167 },
-    { label: 'B', num: 0.01492 },
-    { label: 'C', num: 0.02782 },
-    { label: 'D', num: 0.04253 },
-    { label: 'E', num: 0.12702 },
-    { label: 'F', num: 0.02288 },
-    { label: 'G', num: 0.02015 },
-    { label: 'H', num: 0.06094 },
-    { label: 'I', num: 0.06966 },
-    { label: 'J', num: 0.00153 },
-    { label: 'K', num: 0.00772 },
-    { label: 'L', num: 0.04025 },
-    { label: 'M', num: 0.02406 },
-    { label: 'N', num: 0.06749 },
-    { label: 'O', num: 0.07507 },
-    { label: 'P', num: 0.01929 },
-    { label: 'Q', num: 0.00095 },
-    { label: 'R', num: 0.05987 },
-    { label: 'S', num: 0.06327 },
-    { label: 'T', num: 0.09056 },
-    { label: 'U', num: 0.02758 },
-    { label: 'V', num: 0.00978 },
-    { label: 'W', num: 0.02361 },
-    { label: 'X', num: 0.00151 },
-    { label: 'Y', num: 0.01974 },
-    { label: 'Z', num: 0.00074 },
-  ], [])
   const width = 500
   const height = 500
   const refSvg = useRef(null)
@@ -52,8 +24,6 @@ const D3BarChartA = (props: D3BarChartAProps) => {
     xDomain = '',
     yDomain = undefined
   }={}) => {
-    const X = data.map(item => item.label)
-    const Y = data.map(item => item.num)
     if(xDomain === '') xDomain = 'X'
     console.log(9999999, xDomain)
     

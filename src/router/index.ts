@@ -9,6 +9,11 @@ const router:any = [
     name: 'D3',
     path: '/d3',
     component: React.lazy(() => import('@src/views/d3')),
+  },
+  {
+    name: 'WebGL',
+    path: '/webgl',
+    component: React.lazy(() => import('@src/views/webgl')),
   }
 ]
 
