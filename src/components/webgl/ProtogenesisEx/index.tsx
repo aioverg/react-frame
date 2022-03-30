@@ -37,18 +37,23 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
     // 顶点着色器程序
     const vsSource = `
     attribute vec4 aVertexPosition;
+    attribute vec4 aVertexColor;
 
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
 
+    varying lowp vec4 vColor;
+
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+      vColor = aVertexColor;
     }
   `;
     // 片段着色器程序
     const fsSource = `
-    void main() {
-      gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+    varying lowp vec4 vColor;
+    void main(void) {
+      gl_FragColor = vColor;
     }
   `;
 
@@ -105,16 +110,11 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
       program: shaderProgram,
       attribLocations: {
         vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+        vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
       },
       uniformLocations: {
-        projectionMatrix: gl.getUniformLocation(
-          shaderProgram,
-          "uProjectionMatrix"
-        ),
-        modelViewMatrix: gl.getUniformLocation(
-          shaderProgram,
-          "uModelViewMatrix"
-        ),
+        projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+        modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
       },
     };
 
@@ -127,19 +127,31 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
       // 正方体的顶点
-      var vertices = [
-        1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0,
+      const vertices = [
+        1.0, 1.0, 0.0,
+        -1.0, 1.0, 0.0,
+        1.0, -1.0, 0.0,
+        -1.0, -1.0, 0.0,
       ];
 
       // 将正方体的顶点转化为 WebGL 浮点型类型的数组，并将其传到 gl 对象的  bufferData() 方法来建立对象的顶点
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
-        new Float32Array(vertices),
-        gl.STATIC_DRAW
-      );
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+
+      // 给顶点添加颜色
+      const colorBuffer = gl.createBuffer();
+      // 创建一个四组四值的向量, 每一个向量表示一个顶点的颜色
+      const colors = [
+        1.0, 1.0, 1.0, 1.0, // 白色
+        1.0, 0.0, 0.0, 1.0, // 红色
+        0.0, 1.0, 0.0, 1.0, // 绿色
+        0.0, 0.0, 1.0, 1.0, // 蓝色
+      ]
+      gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW)
 
       return {
         position: positionBuffer,
+        color: colorBuffer,
       };
     };
 
@@ -172,9 +184,9 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
         [-0.0, 0.0, -6.0] // amount to translate
       );
 
-      // 告诉 WebGL 如何从位置缓冲区将位置数据拉取到顶点属性
+      // 告诉 WebGL 如何从位置缓冲区将位置数据拉取到顶点属性(vertexPosition)
       {
-        const numComponents = 3; // 每次迭代拉取 3 个值
+        const numComponents = 3; // 每次迭代拉取 3 个值, 因为顶点是由三个值来确定的
         const type = gl.FLOAT; // 缓冲区的数据类型, 这里是浮点型
         const normalize = false; // 没有标准化
         const stride = 0; // 从一组值到下一组值的字节, 0 表示使用上面的 numComponents 和 type 属性
@@ -189,6 +201,25 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
           offset
         );
         gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+      }
+
+      // 告诉 WebGL 如何从颜色缓冲区中将颜色数据拉去到颜色属性(vertexColor)
+      {
+        const numComponents = 4;
+        const type = gl.FLOAT;
+        const normalize = false;
+        const stride = 0;
+        const offset = 0;
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+        gl.vertexAttribPointer(
+            programInfo.attribLocations.vertexColor,
+            numComponents,
+            type,
+            normalize,
+            stride,
+            offset);
+        gl.enableVertexAttribArray(
+            programInfo.attribLocations.vertexColor);
       }
 
       // 告诉 WebGL 在绘图时使用上面定义的程序
