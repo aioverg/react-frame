@@ -28,7 +28,7 @@ interface D3Props {
 }
 function D3(props: D3Props) {
   const history = useHistory()
-  const [curName, setCurName] = useState('D3AnimatedTransitions')
+  const [curName, setCurName] = useState('Protogenesis2D')
   
   const onClick = (key:string) => {
     history.push(history.location.pathname + '?key=' + key)

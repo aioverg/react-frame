@@ -1,10 +1,9 @@
-import ProtogenesisEx from '@src/components/webgl/Protogenesis2D'
-
+import React from 'react'
 const options = [
   {
-    name: '原生API示例',
-    key: 'D3Ex',
-    component: ProtogenesisEx,
+    name: '原生API示例2D',
+    key: 'Protogenesis2D',
+    component: React.lazy(() => import('@src/components/webgl/Protogenesis2D')),
   },
 ]
 

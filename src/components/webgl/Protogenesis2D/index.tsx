@@ -19,9 +19,9 @@ const ContentBox = styled.div`
   }
 `;
 
-interface ProtogenesisExProps {}
+interface Protogenesis2DProps {}
 
-function ProtogenesisEx(props: ProtogenesisExProps) {
+function Protogenesis2D(props: Protogenesis2DProps) {
   // 初始化着色器程序
   const init = (ref: any) => {
     if (!ref) {
@@ -276,4 +276,4 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
   );
 }
 
-export default ProtogenesisEx;
+export default Protogenesis2D;
