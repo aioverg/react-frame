@@ -4,7 +4,6 @@
  import React from "react";
  import styled from "styled-components";
  import { mat4 } from "gl-matrix";
- 
  const ContentBox = styled.div`
    width: 100%;
    height: 100%;
@@ -26,24 +25,25 @@
   // 顶点着色器程序
   const vsSource = `
     attribute vec4 aVertexPosition;
-    attribute vec4 aVertexColor;
+    attribute vec2 aTextureCoord;
   
     uniform mat4 uModelViewMatrix;
     uniform mat4 uProjectionMatrix;
   
-    varying lowp vec4 vColor;
+    varying highp vec2 vTextureCoord;
   
     void main() {
       gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-      vColor = aVertexColor;
+      vTextureCoord = aTextureCoord;
     }
   `;
 
   // 片段着色器程序
   const fsSource = `
-    varying lowp vec4 vColor;
+  varying highp vec2 vTextureCoord;
+  uniform sampler2D uSampler;
     void main(void) {
-      gl_FragColor = vColor;
+      gl_FragColor = texture2D(uSampler, vTextureCoord);
     }
   `;
 
@@ -141,30 +141,49 @@
     // 将正方形的顶点转化为 WebGL 浮点型类型的数组，并将其传到 gl 对象的  bufferData() 方法来建立对象的顶点
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
   
-    // 给顶点添加颜色
-    const colorBuffer = gl.createBuffer();
+    // 给面添加纹理
+    const textureCoordBuffer  = gl.createBuffer();
     // 创建一个四组四值的向量, 每一个向量表示一个顶点的颜色
-    const colors = [
-      [1.0,  1.0,  1.0,  1.0],    // 白色 前面
-      [1.0,  0.0,  0.0,  1.0],    // 红色 背面
-      [0.0,  1.0,  0.0,  1.0],    // 绿色 顶面
-      [0.0,  0.0,  1.0,  1.0],    // 蓝色 底面
-      [1.0,  1.0,  0.0,  1.0],    // 黄色 右面
-      [1.0,  0.0,  1.0,  1.0]     // 紫色 左面
-    ]
-    let generatedColors:any = [];
-    for (let j=0; j<colors.length; j++) {
-      var c = colors[j];
-      generatedColors = generatedColors.concat(c, c, c, c);
-    }
+    const textureCoordinates = [
+      // 前面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      // 背面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      // 顶面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      // 底面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      // 右面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+      // 左面
+      0.0,  0.0,
+      1.0,  0.0,
+      1.0,  1.0,
+      0.0,  1.0,
+    ];
   
-    gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer)
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(generatedColors), gl.STATIC_DRAW)
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW)
   
     // 创建三角形数组, 每个面由两个三角形组成
-    const cubeVerticesIndexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVerticesIndexBuffer);
-    const cubeVertexIndices = [
+    const indexBuffer  = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    const indices = [
       0,  1,  2,      0,  2,  3,    // front
       4,  5,  6,      4,  6,  7,    // back
       8,  9,  10,     8,  10, 11,   // top
@@ -173,15 +192,51 @@
       20, 21, 22,     20, 22, 23    // left
     ];
   
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices), gl.STATIC_DRAW);
   
     return {
       position: positionBuffer,
-      color: colorBuffer,
-      indices: cubeVerticesIndexBuffer,
+      textureCoord: textureCoordBuffer,
+      indices: indexBuffer,
     };
   };
 
+  // 初始化纹理
+  const initTextures = (gl:any) => {
+    // 创建纹理对象
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    const level = 0;
+    const internalFormat = gl.RGBA;
+    const width = 1;
+    const height = 1;
+    const border = 0;
+    const srcFormat = gl.RGBA;
+    const srcType = gl.UNSIGNED_BYTE;
+    const pixel = new Uint8Array([0, 0, 255, 255]);  // opaque blue
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,width, height, border, srcFormat, srcType, pixel);
+
+
+    const image = new Image()
+    // 图片加载完成, 将图片作为纹理处理
+    image.onload = () => {
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
+
+      // if ((image.width & (image.width - 1)) === 0 && (image.height & (image.height - 1)) === 0) {
+      //   console.log(99999)
+      //   gl.generateMipmap(gl.TEXTURE_2D);
+      // } else {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      // }
+    }
+    image.src = require('./cubetexture.png').default
+
+    return texture;
+  }
 
   // 初始化着色器程序
   const init = (ref: any) => {
@@ -203,16 +258,17 @@
       program: shaderProgram,
       attribLocations: {
         vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
-        vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
+        textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
       },
       uniformLocations: {
         projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
         modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+        uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
       },
     };
 
     // 绘制场景(即绘图)
-    const drawScene = (gl: any, programInfo: any, buffers: any, deltaTime: any) => {
+    const drawScene = (gl: any, programInfo: any, buffers: any, texture: any, deltaTime: any) => {
       // 用黑色清楚缓冲区, 会使图形有黑色背景
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -266,23 +322,22 @@
         gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
       }
 
-      // 告诉 WebGL 如何从颜色缓冲区中将颜色数据拉去到颜色属性(vertexColor)
+      // 告诉 WebGL 如何从纹理缓冲区中将纹理数据拉去到纹理属性(vertexColor)
       {
-        const numComponents = 4;
+        const numComponents = 2;
         const type = gl.FLOAT;
         const normalize = false;
         const stride = 0;
         const offset = 0;
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textureCoord);
         gl.vertexAttribPointer(
-            programInfo.attribLocations.vertexColor,
+            programInfo.attribLocations.textureCoord,
             numComponents,
             type,
             normalize,
             stride,
             offset);
-        gl.enableVertexAttribArray(
-            programInfo.attribLocations.vertexColor);
+        gl.enableVertexAttribArray(programInfo.attribLocations.textureCoord);
       }
 
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
@@ -301,6 +356,13 @@
         false,
         modelViewMatrix
       );
+
+      // 告诉 WebGL 纹理要影响的单元
+      gl.activeTexture(gl.TEXTURE0);
+      // 将纹理绑定到纹理单元
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      // 告诉着色器将纹理绑定到纹理单元
+      gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
 
       // {
       //   const offset = 0;
@@ -325,13 +387,26 @@
       then = now;
 
       // 绘图
-      drawScene(gl, programInfo, initBuffers(gl), deltaTime);
+      drawScene(gl, programInfo, initBuffers(gl), initTextures(gl), deltaTime);
   
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
   };
- 
+  const fx = () => {
+    const img = new Image()
+    img.src = require('./cubetexture.png').default
+    
+    
+    img.onload = () => {
+      console.log(222, img.width)
+    }
+    document.body.appendChild(img);
+    console.log(111111, require('./cubetexture.png').default)
+
+  }
+
+  fx()
    return (
      <ContentBox>
        <canvas ref={init}></canvas>
