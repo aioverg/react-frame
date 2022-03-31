@@ -1,5 +1,5 @@
 /**
- * 原生API示例3D
+ * 原生API示例贴图
  */
  import React from "react";
  import styled from "styled-components";
@@ -19,9 +19,9 @@
    }
  `;
  
- interface Protogenesis3DProps {}
+ interface ProtogenesisTexturesProps {}
  
- function Protogenesis3D(props: Protogenesis3DProps) {
+ function ProtogenesisTextures(props: ProtogenesisTexturesProps) {
 
   // 顶点着色器程序
   const vsSource = `
@@ -339,5 +339,5 @@
    );
  }
  
- export default Protogenesis3D;
+ export default ProtogenesisTextures;
  
