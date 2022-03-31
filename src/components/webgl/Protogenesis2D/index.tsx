@@ -28,6 +28,8 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
       return;
     }
     const gl = ref.getContext("webgl");
+    let squareRotation = 0.0
+    let then = 0 
     if (!gl) {
       // 判断是否支持WebGL
       alert("浏览器不支持WebGL");
@@ -126,15 +128,15 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
       // 绑定上下文
       gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-      // 正方体的顶点
+      // 正方形的顶点
       const vertices = [
-        1.0, 1.0, 0.0,
-        -1.0, 1.0, 0.0,
-        1.0, -1.0, 0.0,
-        -1.0, -1.0, 0.0,
+        1.0, 1.0,
+        -1.0, 1.0,
+        1.0, -1.0,
+        -1.0, -1.0,
       ];
 
-      // 将正方体的顶点转化为 WebGL 浮点型类型的数组，并将其传到 gl 对象的  bufferData() 方法来建立对象的顶点
+      // 将正方形的顶点转化为 WebGL 浮点型类型的数组，并将其传到 gl 对象的  bufferData() 方法来建立对象的顶点
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
       // 给顶点添加颜色
@@ -156,7 +158,7 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
     };
 
     // 绘制场景(即绘图)
-    const drawScene = (gl: any, programInfo: any, buffers: any) => {
+    const drawScene = (gl: any, programInfo: any, buffers: any, deltaTime: any) => {
       // 用黑色清楚缓冲区, 会使图形有黑色背景
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
@@ -183,10 +185,17 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
         modelViewMatrix, // matrix to translate
         [-0.0, 0.0, -6.0] // amount to translate
       );
+      // 设置旋转
+      mat4.rotate(
+        modelViewMatrix,  // 目的矩阵
+        modelViewMatrix,  // 矩阵旋转
+        squareRotation,   // 旋转量(以弧度为单位)
+        [1, 1, 1]         // 旋转轴
+      );
 
       // 告诉 WebGL 如何从位置缓冲区将位置数据拉取到顶点属性(vertexPosition)
       {
-        const numComponents = 3; // 每次迭代拉取 3 个值, 因为顶点是由三个值来确定的
+        const numComponents = 2; // 每次迭代拉取 2 个值, 因为顶点是由2个值来确定的
         const type = gl.FLOAT; // 缓冲区的数据类型, 这里是浮点型
         const normalize = false; // 没有标准化
         const stride = 0; // 从一组值到下一组值的字节, 0 表示使用上面的 numComponents 和 type 属性
@@ -242,10 +251,22 @@ function ProtogenesisEx(props: ProtogenesisExProps) {
         const vertexCount = 4;
         gl.drawArrays(gl.TRIANGLE_STRIP, offset, vertexCount);
       }
+
+      squareRotation += deltaTime;
     };
 
-    // 绘图
-    drawScene(gl, programInfo, initBuffers(gl));
+    // 渲染
+    function render(now: any) {
+      now *= 0.001;
+      const deltaTime = now - then;
+      then = now;
+
+      // 绘图
+      drawScene(gl, programInfo, initBuffers(gl), deltaTime);
+  
+      requestAnimationFrame(render);
+    }
+    requestAnimationFrame(render);
   };
 
   return (

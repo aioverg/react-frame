@@ -1,4 +1,4 @@
-import ProtogenesisEx from '@src/components/webgl/ProtogenesisEx'
+import ProtogenesisEx from '@src/components/webgl/Protogenesis2D'
 
 const options = [
   {
