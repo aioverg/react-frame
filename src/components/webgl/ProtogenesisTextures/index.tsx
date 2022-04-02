@@ -192,7 +192,7 @@
       20, 21, 22,     20, 22, 23    // left
     ];
   
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array(indices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
   
     return {
       position: positionBuffer,
