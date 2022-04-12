@@ -200,7 +200,9 @@
       indices: indexBuffer,
     };
   };
-
+  const isPowerOf2 = (value:any) => {
+    return (value & (value - 1)) === 0;
+  }
   // 初始化纹理
   const initTextures = (gl:any) => {
     // 创建纹理对象
@@ -224,19 +226,19 @@
       gl.bindTexture(gl.TEXTURE_2D, texture);
       gl.texImage2D(gl.TEXTURE_2D, level, internalFormat, srcFormat, srcType, image);
 
-      // if ((image.width & (image.width - 1)) === 0 && (image.height & (image.height - 1)) === 0) {
-      //   console.log(99999)
-      //   gl.generateMipmap(gl.TEXTURE_2D);
-      // } else {
+      if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+        gl.generateMipmap(gl.TEXTURE_2D);
+     } else {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      // }
+     }
     }
     image.src = require('./cubetexture.png').default
-
+    
     return texture;
   }
+
 
   // 初始化着色器程序
   const init = (ref: any) => {
@@ -379,37 +381,26 @@
 
       squareRotation += deltaTime;
     };
+    const texture = initTextures(gl);
 
     // 渲染
     function render(now: any) {
       now *= 0.001;
       const deltaTime = now - then;
       then = now;
+      if( Number(now) > 2 ){return}
 
       // 绘图
-      drawScene(gl, programInfo, initBuffers(gl), initTextures(gl), deltaTime);
+      drawScene(gl, programInfo, initBuffers(gl), texture, deltaTime);
   
       requestAnimationFrame(render);
     }
     requestAnimationFrame(render);
   };
-  const fx = () => {
-    const img = new Image()
-    img.src = require('./cubetexture.png').default
-    
-    
-    img.onload = () => {
-      console.log(222, img.width)
-    }
-    document.body.appendChild(img);
-    console.log(111111, require('./cubetexture.png').default)
 
-  }
-
-  fx()
    return (
      <ContentBox>
-       <canvas ref={init}></canvas>
+       <canvas ref={init} style={{width: '640px', height: '480px'}}></canvas>
      </ContentBox>
    );
  }
